@@ -1,5 +1,6 @@
 package com.example.commonaop.logging;
 
+import com.example.commonaop.mapper.Mapper;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -20,7 +21,7 @@ public class ControllerLoggingAspect {
     public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("executing method " + joinPoint.getSignature().getName());
         long start = System.currentTimeMillis();
-        log.info("service input: {}", joinPoint.getArgs()[0]);
+        log.info("service input: {}", Mapper.toJson(joinPoint.getArgs()[0]));
         Object response = null;
         try {
             response = joinPoint.proceed();
@@ -29,7 +30,7 @@ public class ControllerLoggingAspect {
         }
         long end = System.currentTimeMillis();
         log.info("duration: {} ms", (end - start));
-        log.info("service output: {}", response);
+        log.info("service output: {}", Mapper.toJson(response));
         return response;
     }
 }
